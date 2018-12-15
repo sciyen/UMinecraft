@@ -6,6 +6,8 @@ using UnityEngine;
 [RequireComponent(typeof(Collision))]
 public class MainActorControllor : MonoBehaviour {
     public float moveSpeed = 5;
+    public float rotateSpeed = 0.8f;
+
     Rigidbody rb;
     bool is_jumping = false;
     float jumpForce = 10000;
@@ -29,8 +31,10 @@ public class MainActorControllor : MonoBehaviour {
             is_jumping = true;
         }
         Vector3 dis = Input.mousePosition - mouseInitial;
-        transform.localEulerAngles = new Vector3(0, dis.x, 0);
+        transform.localEulerAngles = new Vector3(0, rotateSpeed*dis.x, 0);
         Transform cam = transform.Find("Main Camera");
+        float rotate = Mathf.Abs(-0.3f * dis.y)>90 ? (dis.y > 0 ? -90 : 90) : - 0.3f * dis.y;
+        cam.transform.localEulerAngles = new Vector3(rotate, 0, 0);
     }
     void OnCollisionEnter(Collision c)
     {
