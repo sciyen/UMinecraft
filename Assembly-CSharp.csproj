@@ -51,7 +51,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Scripts\btn\singleplayer.cs" />
+     <Compile Include="Assets\Scripts\click_gaming.cs" />
+     <Compile Include="Assets\Scripts\clickEvent.cs" />
      <Compile Include="Assets\Scripts\ground.cs" />
      <Compile Include="Assets\Scripts\MainActorControllor.cs" />
      <Compile Include="Assets\Scripts\Manager.cs" />

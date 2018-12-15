@@ -3,34 +3,42 @@ using System.Collections.Generic;
 using UnityEngine;
 public static class Const
 {
+    public static Vector3 mapSize = new Vector3Int(50, 50, 50);
+    public static Vector3 mapOrigin = new Vector3Int(0, 0, 0);
     public const int numItems = 3;
     public const int dirtMaxLive = 10;
     public const int stoneMaxLive = 20;
     public enum GameItemID { Empty, Dirt, Stone };
 }
-public static class LiveMap
+public static class ItemMap
 {
     static int[] liveMap = new int[Const.numItems]
     {0, Const.dirtMaxLive, Const.stoneMaxLive};
+    static string[] textureMap = new string[Const.numItems]
+    {"dirt", "dirtGrass", "stone"};
     public static int getLive(Const.GameItemID id)
     {
         return liveMap[(int)id];
     }
+    public static string getTextureName(Const.GameItemID id)
+    {
+        return textureMap[(int)id];
+    }
 }
-public class LiveCtrl {
+public class ItemCtrl {
     int live;
     int instanceId;
     Const.GameItemID itemId;
-    public LiveCtrl(Const.GameItemID newId, int newInstanceId=0)
+    public ItemCtrl(Const.GameItemID newId, int newInstanceId=0)
     {
         itemId = newId;
-        live = LiveMap.getLive(newId);
+        live = ItemMap.getLive(newId);
     }
     public bool isAlive(Const.GameItemID newId, int newInstanceId, int attack = 1)
     {
         if(newInstanceId != instanceId) {
             instanceId = newInstanceId;
-            live = LiveMap.getLive(newId);
+            live = ItemMap.getLive(newId);
         }
         else
             live -= attack;
@@ -40,7 +48,7 @@ public class LiveCtrl {
     }
     public void reset()
     {
-        live = LiveMap.getLive(itemId);
+        live = ItemMap.getLive(itemId);
     }
 }
 public class Manager : MonoBehaviour {

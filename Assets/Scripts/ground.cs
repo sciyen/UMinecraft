@@ -2,99 +2,75 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Renderer))]
 public class ground : MonoBehaviour {
     public GameObject dirt;
-    static Vector3Int mapSize = new Vector3Int(100, 100, 100);
-    public Vector3Int mapOrigin = new Vector3Int(0, 0, 0);
+    public static Vector3 mapSize = Const.mapSize;//new Vector3Int(Const.mapSize.x, mapSize.y, mapSize.z);
+    public static Vector3 mapOrigin = Const.mapOrigin;
     public Vector3Int terrainMaxSize = new Vector3Int(50, 20, 50);
     public Vector3Int terrainMinSize = new Vector3Int(5, 5, 5);
-    public Const.GameItemID[,,] map = new Const.GameItemID[mapSize.x, mapSize.y, mapSize.z];
+    public Const.GameItemID[,,] map = new Const.GameItemID[(int)mapSize.x, (int)mapSize.y, (int)mapSize.z];
 
-    int groundLevel = 5;
+    int groundLevel = 3;
     int maxMountainHeight = 10;
     int numOfMountain = 10;
 
-    float sitex, sitez;
-    float sizex, sizez;
-    int uplimit;
-
     // Use this for initialization
-    void Start () {
+    void Start()
+    {
         // Instantiate ground base
-        for(int x=0;x<mapSize.x; x++)
+        for (int x = 0; x < mapSize.x; x++)
             for (int z = 0; z < mapSize.z; z++)
                 for (int y = 0; y < mapSize.y; y++) {
-                    if (y < groundLevel) map[x, y, z] = getRandomGround(y);
+                    if (y < groundLevel) map[x, y, z] = Const.GameItemID.Dirt;
                     else map[x, y, z] = Const.GameItemID.Empty;
                 }
         // Generate Terrain
-        for(int n = 0; n < numOfMountain; n++) {
+        for (int n = 0; n < numOfMountain; n++) {
             Vector3 size = getRandomVector(terrainMaxSize, terrainMinSize);
             Vector3 ori = getRandomVector(new Vector3(mapSize.x, groundLevel, mapSize.z));
             CosTerrainGenerator terrain = new CosTerrainGenerator(ori, size);
-            for (int x = 0; x < mapSize.x; x++) 
+            for (int x = 0; x < mapSize.x; x++)
                 for (int z = 0; z < mapSize.z; z++) {
-                    if(terrain.isCovered(new Vector3(x, 0, z))) {
+                    if (terrain.isCovered(new Vector3(x, 0, z))) {
                         int h = Mathf.CeilToInt(terrain.calFunction(new Vector3(x, 0, z)));
-                        Debug.Log("height=" + h);
+                        //Debug.Log("height=" + h);
                         for (int y = h - 1; y >= 0 && (map[x, y, z] == Const.GameItemID.Empty); y--) {
-                            map[x, y, z] = getRandomGround(y);
-                            //Debug.Log("Update"+ new Vector3(x, y, z));
+                            map[x, y, z] = Const.GameItemID.Dirt;
                         }
                     }
                 }
         }
+        // Stone Generator
+        for (int x = 0; x < mapSize.x; x++)
+            for (int z = 0; z < mapSize.z; z++) {
+                int y = getDistanceToGround(new Vector3(x, 0, z));
+                for (int i = 0; i < y; i++)
+                    map[x, y, z] = getRandomGround(new Vector3(x, i, z));
+            }
         // Instantiate
         for (int x = 0; x < mapSize.x; x++)
             for (int z = 0; z < mapSize.z; z++)
                 for (int y = 0; y < mapSize.y; y++)
                     if (map[x, y, z] != Const.GameItemID.Empty)
                         instantiateItem(map[x, y, z], mapOrigin + new Vector3(x, y, z));
-        /*
-        for (float x = mapOrigin.x; x < mapSize.x; x++)
-        {
-            for (float z = mapOrigin.z; z < mapSize.z; z++)
-            {
-                GameObject g = Instantiate(dirt);
-                g.transform.parent = transform;
-                g.transform.position = new Vector3(x, 0, z);
-            }
-        }
-        uplimit = 240 * 240;
-        for (int i = 0; i < mountain; i++)
-        {
-            sitex = Random.Range(mapOrigin.x, mapOrigin.x + mapSize.x);
-            sitez = Random.Range(mapOrigin.z, mapOrigin.z + mapSize.z);
-            sizex = Random.Range(5, 20);
-            sizez = Random.Range(5, 20);
-            float height = Random.Range(5, mapSize.y);
-            for (float y = 1; y < height; y++)
-            {
-                for (float x = sitex -sizex; x < sizex + sitex; x++)
-                {
-                    for (float z = sitez - sizez; z < sizez + sitez; z++)
-                    {
-                        GameObject g = Instantiate(dirt);
-                        g.transform.parent = transform;
-                        g.transform.position = new Vector3(x, y, z);
-                        g.name = x + "," + y + "," + z;
-                    }
-                }
-                sizex -= 1;
-                sizez -= 1;
-            }
-        }
-        Debug.Log(this.gameObject.transform.GetChild(1).name);
-        Debug.Log(uplimit);*/
     }
-	
-	// Update is called once per frame
 	void Update () {
 		
 	}
-    Const.GameItemID getRandomGround(int level)
+    Const.GameItemID getRandomGround(Vector3 p)
     {
-        return Const.GameItemID.Dirt;
+        float d = getDistanceToGround(p);
+        float r = 1 - Mathf.Exp(-d / 5);
+        r += Random.Range(0, 0.3f);
+        if(r < 0.5) return Const.GameItemID.Dirt;
+        return Const.GameItemID.Stone;
+    }
+    int getDistanceToGround(Vector3 p)
+    {
+        int i = (int)p.y;
+        while (i < mapSize.y && map[(int)p.x, i, (int)p.z] != Const.GameItemID.Empty) i++;
+        return i - (int)p.y;
     }
     Vector3 getRandomVector(Vector3 p)
     {
@@ -112,7 +88,10 @@ public class ground : MonoBehaviour {
     }
     public void instantiateItem(Const.GameItemID id, Vector3 position)
     {
+        //Texture texture = (Texture2D)Resources.Load(ItemMap.getTextureName(id));
+        Material m1 = (Material)Resources.Load(ItemMap.getTextureName(id));
         GameObject g = Instantiate(dirt);
+        g.GetComponent<Renderer>().material = m1;
         g.transform.parent = transform;
         g.transform.position = position;
         g.name = id.ToString();
@@ -131,9 +110,9 @@ public abstract class TerrainGenerator
     public abstract float calFunction(Vector3 p);
     public bool isCovered(Vector3 p)
     {
-        if (Mathf.Abs(p.x - origin.x) > size.x) return false;
-        if (Mathf.Abs(p.z - origin.z) > size.z) return false;
-        return true;
+        if (Mathf.Abs(p.x - origin.x) <= size.x 
+         && Mathf.Abs(p.z - origin.z) <= size.z) return true;
+        return false;
         //if (calFunction(p) < p.y) return true;
         //else return false;
     }
