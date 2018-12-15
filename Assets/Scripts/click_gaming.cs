@@ -8,6 +8,11 @@ public class click_gaming : MonoBehaviour {
     public GameObject pauseMode;
     bool state = false;
 
+    public void Start()
+    {
+        pauseMode.gameObject.SetActive(false);
+    }
+
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))

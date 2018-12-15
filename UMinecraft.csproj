@@ -286,6 +286,7 @@
     <Compile Include="Assets\Scripts\click_gaming.cs" />
     <Compile Include="Assets\Scripts\clickEvent.cs" />
     <Compile Include="Assets\Scripts\ground.cs" />
+    <Compile Include="Assets\Scripts\hover.cs" />
     <Compile Include="Assets\Scripts\MainActorControllor.cs" />
     <Compile Include="Assets\Scripts\Manager.cs" />
     <Compile Include="Assets\Scripts\TextInput.cs" />
