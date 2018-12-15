@@ -6,7 +6,7 @@ using UnityEngine;
 [RequireComponent(typeof(Collision))]
 public class MainActorControllor : MonoBehaviour {
     public float moveSpeed = 5;
-    public float rotateSpeed = 0.8f;
+    public float rotateSpeed = 0.1f;
 
     Rigidbody rb;
     bool is_jumping = false;
