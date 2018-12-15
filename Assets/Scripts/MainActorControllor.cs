@@ -13,10 +13,11 @@ public class MainActorControllor : MonoBehaviour {
     bool is_jumping = false;
     float jumpForce = 10000;
     Vector3 mouseInitial;
-    LiveCtrl live = new LiveCtrl(Const.GameItemID.Empty);
+    ItemCtrl live = new ItemCtrl(Const.GameItemID.Empty);
     void Start () {
         rb = GetComponent<Rigidbody>();
         mouseInitial = Input.mousePosition;
+        transform.position = Const.mapOrigin + new Vector3(Const.mapSize.x/2, 10, Const.mapSize.z/2);
     }
 	
 	// Update is called once per frame
@@ -30,9 +31,10 @@ public class MainActorControllor : MonoBehaviour {
         }
         // Jump
         if (!is_jumping && Input.GetKey(KeyCode.Space)) {
-            rb.AddForce(jumpForce * Time.deltaTime * Vector3.up);
-            //transform.localPosition += jumpForce * Time.deltaTime * Vector3.up;
+            //rb.AddForce(jumpForce * Time.deltaTime * Vector3.up, ForceMode.Impulse);
             is_jumping = true;
+            rb.AddForce(new Vector3(0, 5, 0), ForceMode.Impulse);
+            //transform.localPosition += jumpForce * Time.deltaTime * Vector3.up;
         }
         // Rotate
         Vector3 dis = Input.mousePosition - mouseInitial;
