@@ -8,11 +8,40 @@ public static class Const
     public const int stoneMaxLive = 20;
     public enum GameItemID { Empty, Dirt, Stone };
 }
-public class LiveMap
+public static class LiveMap
 {
-
+    static int[] liveMap = new int[Const.numItems]
+    {0, Const.dirtMaxLive, Const.stoneMaxLive};
+    public static int getLive(Const.GameItemID id)
+    {
+        return liveMap[(int)id];
+    }
 }
-public class Instance { 
+public class LiveCtrl {
+    int live;
+    int instanceId;
+    Const.GameItemID itemId;
+    public LiveCtrl(Const.GameItemID newId, int newInstanceId=0)
+    {
+        itemId = newId;
+        live = LiveMap.getLive(newId);
+    }
+    public bool isAlive(Const.GameItemID newId, int newInstanceId, int attack = 1)
+    {
+        if(newInstanceId != instanceId) {
+            instanceId = newInstanceId;
+            live = LiveMap.getLive(newId);
+        }
+        else
+            live -= attack;
+        if (live <= 0)
+            return false;
+        return true;
+    }
+    public void reset()
+    {
+        live = LiveMap.getLive(itemId);
+    }
 }
 public class Manager : MonoBehaviour {
     // Use this for initialization

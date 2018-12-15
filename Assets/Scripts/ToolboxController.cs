@@ -32,10 +32,8 @@ public class ToolboxController : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
     {
-        if (Mathf.Abs(Input.GetAxis("Mouse ScrollWheel")) > 0f) {
+        if (Mathf.Abs(Input.GetAxis("Mouse ScrollWheel")) > 0f)
             toolboxIndexOffset((int)Input.mouseScrollDelta.y);
-            Debug.Log(selectedIndex);
-        }
         transform.Find("toolbox_selected").transform.localPosition = toolboxPosition[selectedIndex];
     }
 
@@ -58,7 +56,7 @@ public class ToolboxController : MonoBehaviour {
             if (toolCount[i] == 0) return i;
         return -1;
     }
-    bool pushItem(Const.GameItemID itemname)
+    public bool pushItem(Const.GameItemID itemname)
     {
         int index = -1;
         for (int i = 0; i < numToolbox; i++)
@@ -77,7 +75,7 @@ public class ToolboxController : MonoBehaviour {
         updateToolbox();
         return true;
     }
-    bool deleteItem(Const.GameItemID itemname)
+    public bool deleteItem(Const.GameItemID itemname)
     {
         int index = -1;
         for (int i = 0; i < numToolbox; i++)

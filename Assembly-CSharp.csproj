@@ -51,9 +51,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\Scripts\btn\singleplayer.cs" />
      <Compile Include="Assets\Scripts\ground.cs" />
      <Compile Include="Assets\Scripts\MainActorControllor.cs" />
      <Compile Include="Assets\Scripts\Manager.cs" />
+     <Compile Include="Assets\Scripts\TextInput.cs" />
      <Compile Include="Assets\Scripts\ToolboxController.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>

@@ -5,6 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(Collision))]
 public class MainActorControllor : MonoBehaviour {
+    public ToolboxController toolbox;
     public float moveSpeed = 5;
     public float rotateSpeed = 0.1f;
 
@@ -12,6 +13,7 @@ public class MainActorControllor : MonoBehaviour {
     bool is_jumping = false;
     float jumpForce = 10000;
     Vector3 mouseInitial;
+    LiveCtrl live = new LiveCtrl(Const.GameItemID.Empty);
     void Start () {
         rb = GetComponent<Rigidbody>();
         mouseInitial = Input.mousePosition;
@@ -43,9 +45,12 @@ public class MainActorControllor : MonoBehaviour {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit rch;
             if (Physics.Raycast(ray, out rch)) {
-                Debug.Log(rch.transform.gameObject.name);
-                Destroy(rch.transform.gameObject);
-                Manager.liveMap
+                Const.GameItemID hitId = getItemsID(rch.transform.gameObject.name);
+                int instanceId = rch.transform.gameObject.GetInstanceID();
+                if(!live.isAlive(hitId, instanceId, 1)) {
+                    toolbox.pushItem(hitId);
+                    Destroy(rch.transform.gameObject);
+                }
             }
         }
         if (Input.GetMouseButton(1)) {
@@ -58,7 +63,10 @@ public class MainActorControllor : MonoBehaviour {
     Const.GameItemID getItemsID(string itemname)
     {
         if (itemname == "dirtGrass(Clone)") return Const.GameItemID.Dirt;
-        else return Const.GameItemID.Empty;
+        else {
+            Debug.Log("Error! Unknown item name" + itemname);
+            return Const.GameItemID.Empty;
+        }
     }
     void OnCollisionEnter(Collision c)
     {
