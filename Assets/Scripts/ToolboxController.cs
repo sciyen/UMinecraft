@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class ToolboxController : MonoBehaviour {
-    public enum GameItems {Empty, Dirt, Stone};
     const int numToolbox = 9;
     static int selectedIndex = 0;
-    static GameItems[] toolbox = new GameItems[numToolbox];
+    static Const.GameItemID[] toolbox = new Const.GameItemID[numToolbox];
     static int[] toolCount = new int[numToolbox];
     Vector3[] toolboxPosition = new Vector3[numToolbox];
     Vector2 itemSize = new Vector2(80, 84); //Width Height
@@ -17,16 +17,16 @@ public class ToolboxController : MonoBehaviour {
 	void Start () {
         for (int i = 0; i < numToolbox; i++) {
             toolboxPosition[i] = new Vector3(toolboxPositionOffset.x + i * itemSize.x, toolboxPositionOffset.y, 0);
-            toolbox[i] = GameItems.Empty;
+            toolbox[i] = Const.GameItemID.Empty;
             toolCount[i] = 0;
             toolImages[i] = Instantiate(toolImage);
             toolImages[i].parent = transform;
             toolImages[i].localPosition = toolboxPosition[i];
             toolImages[i].gameObject.SetActive(false);
         }
-        pushItem(GameItems.Dirt);
-        pushItem(GameItems.Stone);
-        deleteItem(GameItems.Dirt);
+        pushItem(Const.GameItemID.Dirt);
+        pushItem(Const.GameItemID.Stone);
+        deleteItem(Const.GameItemID.Dirt);
     }
 	
 	// Update is called once per frame
@@ -58,7 +58,7 @@ public class ToolboxController : MonoBehaviour {
             if (toolCount[i] == 0) return i;
         return -1;
     }
-    bool pushItem(GameItems itemname)
+    bool pushItem(Const.GameItemID itemname)
     {
         int index = -1;
         for (int i = 0; i < numToolbox; i++)
@@ -77,7 +77,7 @@ public class ToolboxController : MonoBehaviour {
         updateToolbox();
         return true;
     }
-    bool deleteItem(GameItems itemname)
+    bool deleteItem(Const.GameItemID itemname)
     {
         int index = -1;
         for (int i = 0; i < numToolbox; i++)
@@ -85,7 +85,7 @@ public class ToolboxController : MonoBehaviour {
         if (index == -1) return false;
         toolCount[index]--;
         if (toolCount[index] <= 0)
-            toolbox[index] = GameItems.Empty;
+            toolbox[index] = Const.GameItemID.Empty;
         selectedIndex = index;
         updateToolbox();
         return true;
