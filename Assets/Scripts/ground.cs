@@ -4,14 +4,15 @@ using UnityEngine;
 
 public class ground : MonoBehaviour {
     public GameObject dirt;
-    static Vector3Int mapSize = new Vector3Int(50, 50, 50);
+    static Vector3Int mapSize = new Vector3Int(100, 100, 100);
     public Vector3Int mapOrigin = new Vector3Int(0, 0, 0);
-    public Vector3Int terrainMaxSize = new Vector3Int(30, 10, 30);
+    public Vector3Int terrainMaxSize = new Vector3Int(50, 20, 50);
+    public Vector3Int terrainMinSize = new Vector3Int(5, 5, 5);
     public Const.GameItemID[,,] map = new Const.GameItemID[mapSize.x, mapSize.y, mapSize.z];
 
     int groundLevel = 5;
-    int maxMountainHeight = 5;
-    int numOfMountain = 5;
+    int maxMountainHeight = 10;
+    int numOfMountain = 10;
 
     float sitex, sitez;
     float sizex, sizez;
@@ -28,7 +29,7 @@ public class ground : MonoBehaviour {
                 }
         // Generate Terrain
         for(int n = 0; n < numOfMountain; n++) {
-            Vector3 size = getRandomVector(terrainMaxSize);
+            Vector3 size = getRandomVector(terrainMaxSize, terrainMinSize);
             Vector3 ori = getRandomVector(new Vector3(mapSize.x, groundLevel, mapSize.z));
             CosTerrainGenerator terrain = new CosTerrainGenerator(ori, size);
             for (int x = 0; x < mapSize.x; x++) 
@@ -36,7 +37,7 @@ public class ground : MonoBehaviour {
                     if(terrain.isCovered(new Vector3(x, 0, z))) {
                         int h = Mathf.CeilToInt(terrain.calFunction(new Vector3(x, 0, z)));
                         Debug.Log("height=" + h);
-                        for (int y = h - 1; y >= 0 && (map[x, y, z] != Const.GameItemID.Empty); y--) {
+                        for (int y = h - 1; y >= 0 && (map[x, y, z] == Const.GameItemID.Empty); y--) {
                             map[x, y, z] = getRandomGround(y);
                             //Debug.Log("Update"+ new Vector3(x, y, z));
                         }
@@ -102,6 +103,13 @@ public class ground : MonoBehaviour {
             Random.Range(0, p.y),
             Random.Range(0, p.z));
     }
+    Vector3 getRandomVector(Vector3 max, Vector3 min)
+    {
+        return new Vector3(
+            Random.Range(min.x, max.x),
+            Random.Range(min.y, max.y),
+            Random.Range(min.z, max.z));
+    }
     public void instantiateItem(Const.GameItemID id, Vector3 position)
     {
         GameObject g = Instantiate(dirt);
@@ -134,7 +142,7 @@ public class CosTerrainGenerator:TerrainGenerator
 {
     public CosTerrainGenerator(Vector3 newOrigin, Vector3 newSize):base(newOrigin, newSize)
     {
-        alpha1 = Random.Range(size.y * 0.3f, size.y * 0.7f);
+        alpha1 = Random.Range(size.y * 0.4f, size.y * 0.6f);
         alpha2 = size.y - alpha1;
     }
     public override float calFunction(Vector3 p) {
