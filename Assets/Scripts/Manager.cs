@@ -16,7 +16,7 @@ public static class ItemMap
     static int[] liveMap = new int[Const.numItems]
     {0, Const.dirtMaxLive, Const.stoneMaxLive};
     static string[] textureMap = new string[Const.numItems]
-    {"null", "dirt", "stone"};
+    {"dirt", "dirtGrass", "stone"};
     public static int getLive(Const.GameItemID id)
     {
         return liveMap[(int)id];

@@ -60,11 +60,16 @@ public class ground : MonoBehaviour {
 	}
     Const.GameItemID getRandomGround(Vector3 p, float dis=0)
     {
+/*
         //float d = getDistanceToGround(p);
         float r = 1 - Mathf.Exp(-1*dis / 8f);
         r += Random.Range(-0.2f, 0.2f);
         Debug.Log(r);
-        if (r < 0.5) return Const.GameItemID.Dirt;
+        if (r < 0.5) return Const.GameItemID.Dirt;*/
+        float d = getDistanceToGround(p);
+        float r = 1 - Mathf.Exp(-d / 5);
+        r += Random.Range(0, 0.3f);
+        if(r < 0.5) return Const.GameItemID.Dirt;
         return Const.GameItemID.Stone;
     }
     int getDistanceToGround(Vector3 p)
@@ -89,10 +94,10 @@ public class ground : MonoBehaviour {
     }
     public void instantiateItem(Const.GameItemID id, Vector3 position)
     {
-        Texture texture = (Texture2D)Resources.Load(ItemMap.getTextureName(id));
-        //Material m1 = (Material)Resources.Load("dirt1");
+        //Texture texture = (Texture2D)Resources.Load(ItemMap.getTextureName(id));
+        Material m1 = (Material)Resources.Load(ItemMap.getTextureName(id));
         GameObject g = Instantiate(dirt);
-        g.GetComponent<Renderer>().material.mainTexture = texture;
+        g.GetComponent<Renderer>().material = m1;
         g.transform.parent = transform;
         g.transform.position = position;
         g.name = id.ToString();
