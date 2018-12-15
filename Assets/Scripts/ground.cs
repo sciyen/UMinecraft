@@ -5,18 +5,18 @@ using UnityEngine;
 public class ground : MonoBehaviour {
 
     public GameObject dirt;
+    static Vector3 mapSize = new Vector3(50, 10, 50);
+    Vector3 mapOrigin = -1 * mapSize / 2;
     int mountain = 5;
-    int sitex, sitez;
-    int height = 10;
-    int sizex, sizez;
+    float sitex, sitez;
+    float sizex, sizez;
     int uplimit;
 
     // Use this for initialization
     void Start () {
-        int x = 0, z = 0, y = 0;
-        for (x = -120; x < 120; x++)
+        for (float x = mapOrigin.x; x < mapSize.x; x++)
         {
-            for (z = -120; z < 120; z++)
+            for (float z = mapOrigin.z; z < mapSize.z; z++)
             {
                 GameObject g = Instantiate(dirt);
                 g.transform.parent = transform;
@@ -25,18 +25,18 @@ public class ground : MonoBehaviour {
         }
         uplimit = 240 * 240;
         Debug.Log("123");
-        for (int i = 0; i < 30; i++)
+        for (int i = 0; i < mountain; i++)
         {
-            sitex = Random.Range(-100, 100); sitez = Random.Range(-100, 100);
-            sizex = Random.Range(5, 20); sizez = Random.Range(5, 20);
-            height = Random.Range(5, sizex);
-            for (y = 1; y < height; y++)
+            sitex = Random.Range(mapOrigin.x, mapOrigin.x + mapSize.x);
+            sitez = Random.Range(mapOrigin.z, mapOrigin.z + mapSize.z);
+            sizex = Random.Range(5, 20);
+            sizez = Random.Range(5, 20);
+            float height = Random.Range(5, mapSize.y);
+            for (float y = 1; y < height; y++)
             {
-                x = sitex;
-                for (x -= sizex; x < sizex + sitex; x++)
+                for (float x = sitex -sizex; x < sizex + sitex; x++)
                 {
-                    z = sitez;
-                    for (z -= sizez; z < sizez + sitez; z++)
+                    for (float z = sitez - sizez; z < sizez + sitez; z++)
                     {
                         GameObject g = Instantiate(dirt);
                         g.transform.parent = transform;
