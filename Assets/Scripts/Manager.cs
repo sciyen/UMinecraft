@@ -6,8 +6,9 @@ public static class Const
     public static Vector3 mapSize = new Vector3Int(50, 50, 50);
     public static Vector3 mapOrigin = new Vector3Int(0, 0, 0);
     public const int numItems = 3;
-    public const int dirtMaxLive = 10;
-    public const int stoneMaxLive = 20;
+    public const int dirtMaxLive = 5;
+    public const int stoneMaxLive = 10;
+    public const int attackPower = 10;
     public enum GameItemID { Empty, Dirt, Stone };
 }
 public static class ItemMap
@@ -26,7 +27,7 @@ public static class ItemMap
     }
 }
 public class ItemCtrl {
-    int live;
+    float live;
     int instanceId;
     Const.GameItemID itemId;
     public ItemCtrl(Const.GameItemID newId, int newInstanceId=0)
@@ -34,7 +35,7 @@ public class ItemCtrl {
         itemId = newId;
         live = ItemMap.getLive(newId);
     }
-    public bool isAlive(Const.GameItemID newId, int newInstanceId, int attack = 1)
+    public bool isAlive(Const.GameItemID newId, int newInstanceId, float attack = 1)
     {
         if(newInstanceId != instanceId) {
             instanceId = newInstanceId;

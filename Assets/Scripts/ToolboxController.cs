@@ -20,7 +20,7 @@ public class ToolboxController : MonoBehaviour {
             toolbox[i] = Const.GameItemID.Empty;
             toolCount[i] = 0;
             toolImages[i] = Instantiate(toolImage);
-            toolImages[i].parent = transform;
+            toolImages[i].SetParent(transform);
             toolImages[i].localPosition = toolboxPosition[i];
             toolImages[i].gameObject.SetActive(false);
         }

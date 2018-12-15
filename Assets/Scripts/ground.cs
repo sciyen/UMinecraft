@@ -7,7 +7,7 @@ public class ground : MonoBehaviour {
     public GameObject dirt;
     public static Vector3 mapSize = Const.mapSize;//new Vector3Int(Const.mapSize.x, mapSize.y, mapSize.z);
     public static Vector3 mapOrigin = Const.mapOrigin;
-    public Vector3Int terrainMaxSize = new Vector3Int(50, 20, 50);
+    public Vector3Int terrainMaxSize = new Vector3Int(50, 15, 50);
     public Vector3Int terrainMinSize = new Vector3Int(5, 5, 5);
     public Const.GameItemID[,,] map = new Const.GameItemID[(int)mapSize.x, (int)mapSize.y, (int)mapSize.z];
 
@@ -45,8 +45,8 @@ public class ground : MonoBehaviour {
         for (int x = 0; x < mapSize.x; x++)
             for (int z = 0; z < mapSize.z; z++) {
                 int y = getDistanceToGround(new Vector3(x, 0, z));
-                for (int i = 0; i < y; i++)
-                    map[x, y, z] = getRandomGround(new Vector3(x, i, z));
+                for (int i = y-1; i > 0; i--)
+                    map[x, y, z] = getRandomGround(new Vector3(x, i, z), i);
             }
         // Instantiate
         for (int x = 0; x < mapSize.x; x++)
@@ -58,19 +58,20 @@ public class ground : MonoBehaviour {
 	void Update () {
 		
 	}
-    Const.GameItemID getRandomGround(Vector3 p)
+    Const.GameItemID getRandomGround(Vector3 p, float dis=0)
     {
-        int d = getDistanceToGround(p);
-        float r = 1 - Mathf.Exp(-d / 5);
-        r += Random.Range(0, 0.3f);
-        if(r < 0.5) return Const.GameItemID.Dirt;
+        //float d = getDistanceToGround(p);
+        float r = 1 - Mathf.Exp(-1*dis / 8f);
+        r += Random.Range(-0.2f, 0.2f);
+        Debug.Log(r);
+        if (r < 0.5) return Const.GameItemID.Dirt;
         return Const.GameItemID.Stone;
     }
     int getDistanceToGround(Vector3 p)
     {
         int i = (int)p.y;
         while (i < mapSize.y && map[(int)p.x, i, (int)p.z] != Const.GameItemID.Empty) i++;
-        return i - (int)p.y;
+        return (i - (int)p.y)>0 ? i - (int)p.y : 0;
     }
     Vector3 getRandomVector(Vector3 p)
     {

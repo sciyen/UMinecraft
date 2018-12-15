@@ -48,8 +48,9 @@ public class MainActorControllor : MonoBehaviour {
             RaycastHit rch;
             if (Physics.Raycast(ray, out rch)) {
                 Const.GameItemID hitId = getItemsID(rch.transform.gameObject.name);
+                //Debug.Log("Id= "+ hitId.ToString());
                 int instanceId = rch.transform.gameObject.GetInstanceID();
-                if(!live.isAlive(hitId, instanceId, 1)) {
+                if(!live.isAlive(hitId, instanceId, Const.attackPower * Time.deltaTime)) {
                     toolbox.pushItem(hitId);
                     Destroy(rch.transform.gameObject);
                 }
@@ -64,7 +65,8 @@ public class MainActorControllor : MonoBehaviour {
     }
     Const.GameItemID getItemsID(string itemname)
     {
-        if (itemname == "dirtGrass(Clone)") return Const.GameItemID.Dirt;
+        if (itemname == Const.GameItemID.Dirt.ToString()) return Const.GameItemID.Dirt;
+        else if (itemname == Const.GameItemID.Stone.ToString()) return Const.GameItemID.Stone;
         else {
             Debug.Log("Error! Unknown item name" + itemname);
             return Const.GameItemID.Empty;
