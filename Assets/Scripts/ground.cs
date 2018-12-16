@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Renderer))]
-public class ground : MonoBehaviour {
+public class Ground : MonoBehaviour {
     public GameObject dirt;
     public static Vector3 mapSize = Const.mapSize;//new Vector3Int(Const.mapSize.x, mapSize.y, mapSize.z);
     public static Vector3 mapOrigin = Const.mapOrigin;
@@ -12,7 +12,6 @@ public class ground : MonoBehaviour {
     public Const.GameItemID[,,] map = new Const.GameItemID[(int)mapSize.x, (int)mapSize.y, (int)mapSize.z];
 
     int groundLevel = 3;
-    int maxMountainHeight = 10;
     int numOfMountain = 10;
 
     // Use this for initialization
@@ -44,9 +43,10 @@ public class ground : MonoBehaviour {
         // Stone Generator
         for (int x = 0; x < mapSize.x; x++)
             for (int z = 0; z < mapSize.z; z++) {
-                int y = getDistanceToGround(new Vector3(x, 0, z));
-                for (int i = y-1; i > 0; i--)
-                    map[x, y, z] = getRandomGround(new Vector3(x, i, z), i);
+                int h = getDistanceToGround(new Vector3(x, 0, z));
+                map[x, h, z] = Const.GameItemID.DirtGrass;
+                for (int y = 0; y < h; y++)
+                    map[x, y, z] = getRandomGround(new Vector3(x, y, z), h-y-1);
             }
         // Instantiate
         for (int x = 0; x < mapSize.x; x++)
@@ -60,23 +60,23 @@ public class ground : MonoBehaviour {
 	}
     Const.GameItemID getRandomGround(Vector3 p, float dis=0)
     {
-/*
+        /*
         //float d = getDistanceToGround(p);
         float r = 1 - Mathf.Exp(-1*dis / 8f);
         r += Random.Range(-0.2f, 0.2f);
         Debug.Log(r);
         if (r < 0.5) return Const.GameItemID.Dirt;*/
-        float d = getDistanceToGround(p);
-        float r = 1 - Mathf.Exp(-d / 5);
-        r += Random.Range(0, 0.3f);
-        if(r < 0.5) return Const.GameItemID.Dirt;
+        float d = dis;// getDistanceToGround(p);
+        float r = 1 - Mathf.Exp(-1*d / 5); 
+        r += Random.Range(-0f, 0.3f);
+        if (r < 0.5) return Const.GameItemID.Dirt;
         return Const.GameItemID.Stone;
     }
     int getDistanceToGround(Vector3 p)
     {
         int i = (int)p.y;
         while (i < mapSize.y && map[(int)p.x, i, (int)p.z] != Const.GameItemID.Empty) i++;
-        return (i - (int)p.y)>0 ? i - (int)p.y : 0;
+        return (i - (int)p.y)>0 ? (i - (int)p.y) : 0;
     }
     Vector3 getRandomVector(Vector3 p)
     {
@@ -94,7 +94,6 @@ public class ground : MonoBehaviour {
     }
     public void instantiateItem(Const.GameItemID id, Vector3 position)
     {
-        //Texture texture = (Texture2D)Resources.Load(ItemMap.getTextureName(id));
         Material m1 = (Material)Resources.Load(ItemMap.getTextureName(id));
         GameObject g = Instantiate(dirt);
         g.GetComponent<Renderer>().material = m1;

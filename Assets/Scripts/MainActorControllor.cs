@@ -6,12 +6,12 @@ using UnityEngine;
 [RequireComponent(typeof(Collision))]
 public class MainActorControllor : MonoBehaviour {
     public ToolboxController toolbox;
+    //public Ground ground;
     public float moveSpeed = 5;
     public float rotateSpeed = 0.1f;
 
     Rigidbody rb;
     bool is_jumping = false;
-    float jumpForce = 10000;
     Vector3 mouseInitial;
     ItemCtrl live = new ItemCtrl(Const.GameItemID.Empty);
     void Start () {
@@ -50,22 +50,39 @@ public class MainActorControllor : MonoBehaviour {
                 Const.GameItemID hitId = getItemsID(rch.transform.gameObject.name);
                 //Debug.Log("Id= "+ hitId.ToString());
                 int instanceId = rch.transform.gameObject.GetInstanceID();
-                if(!live.isAlive(hitId, instanceId, Const.attackPower * Time.deltaTime)) {
+                int destroyLevel = live.isAlive(hitId, instanceId, Const.attackPower * Time.deltaTime);
+                if (destroyLevel <= 0) {
                     toolbox.pushItem(hitId);
-                    Destroy(rch.transform.gameObject);
+                    Destroy(rch.transform.gameObject);        
+                }
+                else {
+                    string name = "destroy/destroy_stage_" + destroyLevel;/*
+                    Material[] breakMl = new Material[2];
+                    Material breakM2 = new Material();
+                    breakM2.mainTexture = (Texture)Resources.Load(name);
+                    breakMl[0] = rch.transform.GetComponent<Renderer>().material;
+                    breakMl[1] = breakM2;// (Material)Resources.Load(name);*/
+                    Material breakM1 = rch.transform.GetComponent<Renderer>().material;
+                    breakM1.mainTexture = (Texture)Resources.Load(name);
+                    rch.transform.GetComponent<Renderer>().material = breakM1;
                 }
             }
         }
         if (Input.GetMouseButton(1)) {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit rch;
-            if (Physics.Raycast(ray, out rch)) {
+            if (toolbox.isSelected()) {
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                RaycastHit rch;
+                if (Physics.Raycast(ray, out rch)) {
+                    Vector3 target = rch.point + rch.normal/2;
+                    //ground.instantiateItem(toolbox.deleteSeletedItem(), target);
+                }
             }
         }
     }
     Const.GameItemID getItemsID(string itemname)
     {
         if (itemname == Const.GameItemID.Dirt.ToString()) return Const.GameItemID.Dirt;
+        else if (itemname == Const.GameItemID.DirtGrass.ToString()) return Const.GameItemID.DirtGrass;
         else if (itemname == Const.GameItemID.Stone.ToString()) return Const.GameItemID.Stone;
         else {
             Debug.Log("Error! Unknown item name" + itemname);

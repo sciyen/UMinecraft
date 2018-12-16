@@ -5,18 +5,18 @@ public static class Const
 {
     public static Vector3 mapSize = new Vector3Int(50, 50, 50);
     public static Vector3 mapOrigin = new Vector3Int(0, 0, 0);
-    public const int numItems = 3;
+    public const int numItems = 4;
     public const int dirtMaxLive = 5;
     public const int stoneMaxLive = 10;
     public const int attackPower = 10;
-    public enum GameItemID { Empty, Dirt, Stone };
+    public enum GameItemID { Empty, Dirt, DirtGrass, Stone };
 }
 public static class ItemMap
 {
     static int[] liveMap = new int[Const.numItems]
-    {0, Const.dirtMaxLive, Const.stoneMaxLive};
+    {0, Const.dirtMaxLive, Const.dirtMaxLive, Const.stoneMaxLive};
     static string[] textureMap = new string[Const.numItems]
-    {"dirt", "dirtGrass", "stone"};
+    {"null", "dirt", "dirtGrass", "stone"};
     public static int getLive(Const.GameItemID id)
     {
         return liveMap[(int)id];
@@ -35,7 +35,7 @@ public class ItemCtrl {
         itemId = newId;
         live = ItemMap.getLive(newId);
     }
-    public bool isAlive(Const.GameItemID newId, int newInstanceId, float attack = 1)
+    public int isAlive(Const.GameItemID newId, int newInstanceId, float attack = 1)
     {
         if(newInstanceId != instanceId) {
             instanceId = newInstanceId;
@@ -43,9 +43,10 @@ public class ItemCtrl {
         }
         else
             live -= attack;
-        if (live <= 0)
-            return false;
-        return true;
+        return Mathf.CeilToInt( 10f * live / ItemMap.getLive(newId) );
+        //if (live <= 0)
+        //    return false;
+        //return true;
     }
     public void reset()
     {
