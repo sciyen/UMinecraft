@@ -6,7 +6,7 @@ using UnityEngine;
 [RequireComponent(typeof(Collision))]
 public class MainActorControllor : MonoBehaviour {
     public ToolboxController toolbox;
-    //public Ground ground;
+    public Ground ground;
     public float moveSpeed = 5;
     public float rotateSpeed = 0.1f;
 
@@ -74,7 +74,10 @@ public class MainActorControllor : MonoBehaviour {
                 RaycastHit rch;
                 if (Physics.Raycast(ray, out rch)) {
                     Vector3 target = rch.point + rch.normal/2;
-                    //ground.instantiateItem(toolbox.deleteSeletedItem(), target);
+                    target.x = Mathf.Round(target.x);
+                    target.y = Mathf.Round(target.y);
+                    target.z = Mathf.Round(target.z);
+                    ground.instantiateItem(toolbox.deleteSeletedItem(), target);
                 }
             }
         }

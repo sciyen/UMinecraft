@@ -59,6 +59,7 @@ public class ToolboxController : MonoBehaviour {
     }
     public bool pushItem(Const.GameItemID itemname)
     {
+        if (itemname == Const.GameItemID.DirtGrass) itemname = Const.GameItemID.Dirt;
         int index = -1;
         for (int i = 0; i < numToolbox; i++)
             if (toolbox[i] == itemname) index = i;
