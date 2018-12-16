@@ -15,7 +15,7 @@ public class ToolboxController : MonoBehaviour
     public static float toolboxY = -1 * Screen.height * 0.4f;
     Vector3[] toolboxPosition = new Vector3[numToolbox];
     Vector2 itemSize = new Vector2(80, 84); //Width Height
-    Vector2 toolSize = new Vector2(66, 66);  //Width Height
+    //Vector2 toolSize = new Vector2(66, 66);  //Width Height
     Vector3 toolboxPositionOffset = new Vector3(-320, toolboxY, 0);
     
     //Transform[] toolImages = new Transform[numToolbox];
@@ -77,7 +77,6 @@ public class ToolboxController : MonoBehaviour
                 //toolImages[index].overrideSprite = texture;
                 //toolImages[index].GetComponent<Renderer>().material.mainTexture = Resources.Load<Texture>("sprite/" + ItemMap.getTextureName(itemname));
                 toolImages[index].GetComponent<Image>().overrideSprite = Resources.Load<Sprite>("sprite/" + ItemMap.getTextureName(itemname));
-                Debug.Log("Source loaded");
             }
             else {
                 Debug.Log("Error! Toolbox is full!");

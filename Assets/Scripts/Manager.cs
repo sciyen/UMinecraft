@@ -9,6 +9,7 @@ public static class Const
     public const float moveSpeed = 5f;
     // Time Configure
     public const int dayRoutine = 60;
+    public const float attackTimeInterval = 0.5f;
     // Map Configure
     public static Vector3 mapSize = new Vector3Int(50, 50, 50);
     public static Vector3 mapOrigin = new Vector3Int(0, 0, 0);
@@ -19,15 +20,17 @@ public static class Const
     public enum GameItemID { Empty, Dirt, DirtGrass, Stone, Creeper, MainActor };
     // Main Actor Configure
     public const int attackPower = 10;  // MainActor Attack Power
-    public const int maxLive = 20;
+    public const int maxLive = 10;
     // Enemy Configure
     public const int numEnemy = 10;
-    public const float appearRadius = 10;
+    public const float appearRadius = 20;
     // Creeper
     //public static Creature creeper = new Creature(20, 30, 5);
     public static int creeperMaxLive = 20;
+    public static int creeperAttackPower = 1;
     public static int creeperTrackDistance = 30;
     public static int creeperAttackDistance = 5;
+    public static int creeperAudioDistance = 10;
 }
 /*public static class Creature
 {

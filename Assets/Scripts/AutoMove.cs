@@ -26,7 +26,7 @@ public class AutoMove : MonoBehaviour {
             if (Ground.map[(int)fp.x, (int)fp.y - 1, (int)fp.x] != Const.GameItemID.Empty)
                 jump();
             transform.position += unitDir * Time.deltaTime * 0.5f;
-            if (Vector3.Distance(transform.position, target) < 5)
+            if (Vector3.Distance(transform.position, target) < 1)
                 task = false;
         }
     }

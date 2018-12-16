@@ -4,6 +4,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(Collision))]
+[RequireComponent(typeof(AudioSource))]
 public class MainActorControllor : MonoBehaviour {
     public ToolboxController toolbox;
     public Ground ground;
@@ -14,6 +15,7 @@ public class MainActorControllor : MonoBehaviour {
     ItemCtrl live = new ItemCtrl(Const.GameItemID.Empty);
     float lastJumpTime;
     void Start () {
+        transform.GetComponent<AudioSource>().Play(0);
         rb = GetComponent<Rigidbody>();
         mouseInitial = Input.mousePosition;
         lastJumpTime = Time.time;
@@ -76,10 +78,11 @@ public class MainActorControllor : MonoBehaviour {
                         Destroy(rch.transform.gameObject);
                     }
                     else {
-                        string name = "destroy/destroy_stage_" + destroyLevel;
-                        Material breakM1 = rch.transform.GetComponent<Renderer>().material;
-                        breakM1.mainTexture = (Texture)Resources.Load(name);
-                        rch.transform.GetComponent<Renderer>().material = breakM1;
+                        string name = "destroy/Materials/destroy_stage_" + (9 - destroyLevel);
+                        Material[] breakM1 = new Material[2];
+                        breakM1[0] = (Material)Resources.Load(ItemMap.getTextureName(hitId));
+                        breakM1[1] = (Material)Resources.Load(name);
+                        rch.transform.GetComponent<Renderer>().materials = breakM1;
                     }
                 }
                 // Creature

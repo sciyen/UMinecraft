@@ -5,11 +5,7 @@ using UnityEngine;
 public class LiveManager : MonoBehaviour {
     public float live;
     public Const.GameItemID itemId;
-    /*public LiveManager(Const.GameItemID newId)
-    {
-        itemId = newId;
-        live = ItemMap.getLive(newId);
-    }*/
+    float lastAttackTime;
     public void reset(Const.GameItemID newId)
     {
         itemId = newId;
@@ -17,7 +13,10 @@ public class LiveManager : MonoBehaviour {
     }
     public void attack(float power)
     {
-        live -= power;
+        if(Time.time - lastAttackTime > Const.attackTimeInterval) {
+            live -= power;
+            lastAttackTime = Time.time;
+        }
     }
     public void relive()
     {
@@ -25,8 +24,8 @@ public class LiveManager : MonoBehaviour {
     }
     // Use this for initialization
     void Start () {
-		
-	}
+        lastAttackTime = Time.time;
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -36,7 +35,7 @@ public class LiveManager : MonoBehaviour {
 public class ItemCtrl:LiveManager
 {
     int instanceId;
-    Const.GameItemID itemId;
+    public Const.GameItemID itemId;
     public ItemCtrl(Const.GameItemID newId, int newInstanceId = 0)
     {
         base.reset(newId);
