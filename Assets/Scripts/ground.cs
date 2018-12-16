@@ -9,8 +9,8 @@ public class Ground : MonoBehaviour {
     public static Vector3 mapOrigin = Const.mapOrigin;
     public Vector3Int terrainMaxSize = new Vector3Int(50, 15, 50);
     public Vector3Int terrainMinSize = new Vector3Int(5, 5, 5);
-    public Const.GameItemID[,,] map = new Const.GameItemID[(int)mapSize.x, (int)mapSize.y, (int)mapSize.z];
-    public bool mapReady = false;
+    public static Const.GameItemID[,,] map = new Const.GameItemID[(int)mapSize.x, (int)mapSize.y, (int)mapSize.z];
+    public static bool mapReady = false;
 
     int groundLevel = 3;
     int numOfMountain = 10;
@@ -74,25 +74,25 @@ public class Ground : MonoBehaviour {
         if (r < 0.5) return Const.GameItemID.Dirt;
         return Const.GameItemID.Stone;
     }
-    public int getDistanceToGround(Vector3 p)
+    public static int getDistanceToGround(Vector3 p)
     {
         int i = (int)p.y;
         while (i < mapSize.y && map[(int)p.x, i, (int)p.z] != Const.GameItemID.Empty) i++;
         return (i - (int)p.y)>0 ? (i - (int)p.y) : 0;
     }
-    public Vector3 getPointOnGround(Vector3 p)
+    public static Vector3 getPointOnGround(Vector3 p)
     {
-        int height = getDistanceToGround(new Vector3(p.x, 0, p.z / 2));
-        return Const.mapOrigin + new Vector3(Const.mapSize.x / 2, height + 1, Const.mapSize.z / 2);
+        int height = getDistanceToGround(new Vector3(p.x, 0, p.z));
+        return Const.mapOrigin + new Vector3(p.x, height + 1, p.z);
     }
-    Vector3 getRandomVector(Vector3 p)
+    public static Vector3 getRandomVector(Vector3 p)
     {
         return new Vector3(
             Random.Range(0, p.x),
             Random.Range(0, p.y),
             Random.Range(0, p.z));
     }
-    Vector3 getRandomVector(Vector3 max, Vector3 min)
+    public static Vector3 getRandomVector(Vector3 max, Vector3 min)
     {
         return new Vector3(
             Random.Range(min.x, max.x),

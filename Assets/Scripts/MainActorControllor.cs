@@ -13,12 +13,13 @@ public class MainActorControllor : MonoBehaviour {
     bool is_jumping = false;
     Vector3 mouseInitial;
     ItemCtrl live = new ItemCtrl(Const.GameItemID.Empty);
-    float lastJumpTime = Time.time;
+    float lastJumpTime;
     void Start () {
         rb = GetComponent<Rigidbody>();
         mouseInitial = Input.mousePosition;
-        while (!ground.mapReady) StartCoroutine(wait());
-        transform.position = ground.getPointOnGround(new Vector3(Const.mapSize.x/2, 0, Const.mapSize.z/2));
+        lastJumpTime = Time.time;
+        while (!Ground.mapReady) StartCoroutine(wait());
+        transform.position = Ground.getPointOnGround(new Vector3(Const.mapSize.x/2, 0, Const.mapSize.z/2));
     }
 	IEnumerator wait()
     {
