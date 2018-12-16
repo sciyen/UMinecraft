@@ -53,6 +53,7 @@
   <ItemGroup>
      <Compile Include="Assets\Scripts\click_gaming.cs" />
      <Compile Include="Assets\Scripts\clickEvent.cs" />
+     <Compile Include="Assets\Scripts\EnemyControllor.cs" />
      <Compile Include="Assets\Scripts\Ground.cs" />
      <Compile Include="Assets\Scripts\hover.cs" />
      <Compile Include="Assets\Scripts\MainActorControllor.cs" />

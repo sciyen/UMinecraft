@@ -8,18 +8,22 @@ public class MainActorControllor : MonoBehaviour {
     public ToolboxController toolbox;
     public Ground ground;
     public float moveSpeed = 5;
-    public float rotateSpeed = 0.1f;
 
     Rigidbody rb;
     bool is_jumping = false;
     Vector3 mouseInitial;
     ItemCtrl live = new ItemCtrl(Const.GameItemID.Empty);
+    float lastJumpTime = Time.time;
     void Start () {
         rb = GetComponent<Rigidbody>();
         mouseInitial = Input.mousePosition;
-        transform.position = Const.mapOrigin + new Vector3(Const.mapSize.x/2, 10, Const.mapSize.z/2);
+        while (!ground.mapReady) StartCoroutine(wait());
+        transform.position = ground.getPointOnGround(new Vector3(Const.mapSize.x/2, 0, Const.mapSize.z/2));
     }
-	
+	IEnumerator wait()
+    {
+        yield return new WaitForSeconds(0.1f);
+    }
 	// Update is called once per frame
 	void Update () {
         // Move
@@ -29,22 +33,30 @@ public class MainActorControllor : MonoBehaviour {
         else if (Input.GetKey(KeyCode.S)) {
             transform.localPosition += -1 * moveSpeed * Time.deltaTime * transform.forward;
         }
+        if (Input.GetKey(KeyCode.D)) {
+            transform.localPosition += moveSpeed * Time.deltaTime * transform.right;
+        }
+        else if (Input.GetKey(KeyCode.A)) {
+            transform.localPosition += -1 * moveSpeed * Time.deltaTime * transform.right;
+        }
         // Jump
-        if (!is_jumping && Input.GetKey(KeyCode.Space)) {
+        if (!is_jumping && Time.time - lastJumpTime > 0.5 && Input.GetKey(KeyCode.Space)) {
             //rb.AddForce(jumpForce * Time.deltaTime * Vector3.up, ForceMode.Impulse);
             is_jumping = true;
-            rb.AddForce(new Vector3(0, 5, 0), ForceMode.Impulse);
+            lastJumpTime = Time.time;
+            rb.AddForce(new Vector3(0, 7, 0), ForceMode.Impulse);
             //transform.localPosition += jumpForce * Time.deltaTime * Vector3.up;
         }
         // Rotate
         Vector3 dis = Input.mousePosition - mouseInitial;
-        transform.localEulerAngles = new Vector3(0, rotateSpeed*dis.x, 0);
+        transform.localEulerAngles = new Vector3(0, Const.rotateSpeed*dis.x, 0);
         Transform cam = transform.Find("Main Camera");
-        float rotate = Mathf.Abs(-0.3f * dis.y)>90 ? (dis.y > 0 ? -90 : 90) : - 0.3f * dis.y;
+        float rotate = Mathf.Abs(-1*Const.updownSpeed * dis.y)>90 ? (dis.y > 0 ? -90 : 90) : -1 * Const.updownSpeed * dis.y;
         cam.transform.localEulerAngles = new Vector3(rotate, 0, 0);
         // Click
         if (Input.GetMouseButton(0)) {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            //Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            Ray ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width/2, Screen.height/2));
             RaycastHit rch;
             if (Physics.Raycast(ray, out rch)) {
                 Const.GameItemID hitId = getItemsID(rch.transform.gameObject.name);
@@ -92,8 +104,9 @@ public class MainActorControllor : MonoBehaviour {
             return Const.GameItemID.Empty;
         }
     }
-    void OnCollisionEnter(Collision c)
+    void OnCollisionEnter(Collision other)
     {
-        is_jumping = false;
+        if(Vector3.Angle(other.contacts[0].normal, Vector3.up)<10)
+            is_jumping = false;
     }
 }

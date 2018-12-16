@@ -3,13 +3,22 @@ using System.Collections.Generic;
 using UnityEngine;
 public static class Const
 {
+    // Input Configure
+    public const float rotateSpeed = 0.07f;
+    public const float updownSpeed = 0.07f;
+    // Map Configure
     public static Vector3 mapSize = new Vector3Int(50, 50, 50);
     public static Vector3 mapOrigin = new Vector3Int(0, 0, 0);
+    // Item Configure
     public const int numItems = 4;
     public const int dirtMaxLive = 5;
     public const int stoneMaxLive = 10;
     public const int attackPower = 10;
     public enum GameItemID { Empty, Dirt, DirtGrass, Stone };
+    // Enemy Configure
+    public const int numEnemy = 10;
+    public const float trackDistance = 20;
+    public const float attackDistance = 5;
 }
 public static class ItemMap
 {
