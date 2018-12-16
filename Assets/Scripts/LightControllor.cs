@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class LightControllor : MonoBehaviour {
-
 	// Use this for initialization
 	void Start () {
 		
@@ -11,6 +10,6 @@ public class LightControllor : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	    
+	    transform.rotation = 
 	}
 }

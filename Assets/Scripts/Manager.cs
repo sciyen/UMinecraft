@@ -6,6 +6,8 @@ public static class Const
     // Input Configure
     public const float rotateSpeed = 0.1f;
     public const float updownSpeed = 0.07f;
+    // Time Configure
+    public const int dayRoutine = 60;
     // Map Configure
     public static Vector3 mapSize = new Vector3Int(50, 50, 50);
     public static Vector3 mapOrigin = new Vector3Int(0, 0, 0);
