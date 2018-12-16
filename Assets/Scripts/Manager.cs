@@ -6,17 +6,20 @@ public static class Const
     // Input Configure
     public const float rotateSpeed = 0.1f;
     public const float updownSpeed = 0.07f;
+    public const float moveSpeed = 5f;
     // Time Configure
     public const int dayRoutine = 60;
     // Map Configure
     public static Vector3 mapSize = new Vector3Int(50, 50, 50);
     public static Vector3 mapOrigin = new Vector3Int(0, 0, 0);
     // Item Configure
-    public const int attackPower = 10;  // MainActor Attack Power
-    public const int numItems = 5;
+    public const int numItems = 6;
     public const int dirtMaxLive = 5;
     public const int stoneMaxLive = 10;
-    public enum GameItemID { Empty, Dirt, DirtGrass, Stone, Creeper };
+    public enum GameItemID { Empty, Dirt, DirtGrass, Stone, Creeper, MainActor };
+    // Main Actor Configure
+    public const int attackPower = 10;  // MainActor Attack Power
+    public const int maxLive = 20;
     // Enemy Configure
     public const int numEnemy = 10;
     public const float appearRadius = 10;
@@ -36,9 +39,10 @@ public static class Const
 public static class ItemMap
 {
     static int[] liveMap = new int[Const.numItems]
-    {0, Const.dirtMaxLive, Const.dirtMaxLive, Const.stoneMaxLive, Const.creeperMaxLive};
+    {0, Const.dirtMaxLive, Const.dirtMaxLive, Const.stoneMaxLive, Const.creeperMaxLive, Const.maxLive};
     static string[] textureMap = new string[Const.numItems]
-    {"null", "dirt", "dirtGrass", "stone", "null"};
+    {"null", "dirt", "dirtGrass", "stone", "null", "null"};
+
     public static int getLive(Const.GameItemID id)
     {
         return liveMap[(int)id];
@@ -47,42 +51,26 @@ public static class ItemMap
     {
         return textureMap[(int)id];
     }
-}
-public class ItemCtrl {
-    float live;
-    int instanceId;
-    Const.GameItemID itemId;
-    public ItemCtrl(Const.GameItemID newId, int newInstanceId=0)
+    public static bool isItem(Const.GameItemID id)
     {
-        itemId = newId;
-        live = ItemMap.getLive(newId);
+        if (id == Const.GameItemID.Dirt
+        || id == Const.GameItemID.DirtGrass
+        || id == Const.GameItemID.Stone) return true;
+        return false;
     }
-    public int isAlive(Const.GameItemID newId, int newInstanceId, float attack = 1)
+    public static Const.GameItemID getItemsID(string itemname)
     {
-        if(newInstanceId != instanceId) {
-            instanceId = newInstanceId;
-            live = ItemMap.getLive(newId);
-        }
-        else
-            live -= attack;
-        return Mathf.CeilToInt( 10f * live / ItemMap.getLive(newId) );
-        //if (live <= 0)
-        //    return false;
-        //return true;
+        for (int i = 0; i < Const.numItems; i++)
+            if (itemname == ((Const.GameItemID)i).ToString()) return (Const.GameItemID)i;
+        Debug.Log("Error! Unknown item name" + itemname);
+        return Const.GameItemID.Empty;
+        /*
+        if (itemname == Const.GameItemID.Dirt.ToString()) return Const.GameItemID.Dirt;
+        else if (itemname == Const.GameItemID.DirtGrass.ToString()) return Const.GameItemID.DirtGrass;
+        else if (itemname == Const.GameItemID.Stone.ToString()) return Const.GameItemID.Stone;
+        else {
+            Debug.Log("Error! Unknown item name" + itemname);
+            return Const.GameItemID.Empty;
+        }*/
     }
-    public void reset()
-    {
-        live = ItemMap.getLive(itemId);
-    }
-}
-public class Manager : MonoBehaviour {
-    // Use this for initialization
-    void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
 }

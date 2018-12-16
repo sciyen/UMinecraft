@@ -17,9 +17,16 @@ public class EnemyControllor : MonoBehaviour {
         float enemyRatial = Random.Range(0f, 1f);
         if (Enemies.Count < Const.numEnemy)
             pushNewEnemy(getEnemyIdByRatial(enemyRatial));
-        foreach(Transform e in Enemies) {
-            if (calDistanceWithMainActor(e) > Const.creeperAttackDistance)
-                e.GetComponent<AutoMove>().setTarget(mainActor.transform.position);
+        for(int i = 0; i < Enemies.Count; i++) {
+            // Auto move toward main actor
+            if (calDistanceWithMainActor(Enemies[i]) > Const.creeperAttackDistance)
+                Enemies[i].GetComponent<AutoMove>().setTarget(mainActor.transform.position);
+            // Destroy the creature if they died
+            LiveManager creeperLive = Enemies[i].GetComponent<LiveManager>();
+            if(creeperLive.live <= 0) {
+                Destroy(Enemies[i].gameObject);
+                Enemies.RemoveAt(i);
+            }
         }
 	}
     void pushNewEnemy(Const.GameItemID id)
@@ -32,6 +39,8 @@ public class EnemyControllor : MonoBehaviour {
         } while (calDistanceWithMainActor(rnd) < Const.appearRadius);
         tmp.position = rnd;
         tmp.parent = transform;
+        tmp.name = id.ToString();
+        tmp.GetComponent<LiveManager>().reset(id);
         Enemies.Add(tmp);
     }
     float calDistanceWithMainActor()
@@ -55,7 +64,7 @@ public class EnemyControllor : MonoBehaviour {
         int kindOfEnemy = 1;
         float slice = 1f / kindOfEnemy;
         float sum = slice;
-        if (r > sum) return Const.GameItemID.Creeper;
+        if (r < sum) return Const.GameItemID.Creeper;
         return Const.GameItemID.Empty;
     }
     IEnumerator wait()

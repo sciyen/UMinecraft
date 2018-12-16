@@ -4,16 +4,20 @@ using UnityEngine;
 using UnityEngine.UI;
 
 
-public class ToolboxController : MonoBehaviour {
+public class ToolboxController : MonoBehaviour
+{
+    public Image toolImage;
+
     const int numToolbox = 9;
     static int selectedIndex = 0;
     static Const.GameItemID[] toolbox = new Const.GameItemID[numToolbox];
     static int[] toolCount = new int[numToolbox];
-    static float toolboxY = -1 * Screen.height * 0.4f;
+    public static float toolboxY = -1 * Screen.height * 0.4f;
     Vector3[] toolboxPosition = new Vector3[numToolbox];
     Vector2 itemSize = new Vector2(80, 84); //Width Height
     Vector2 toolSize = new Vector2(66, 66);  //Width Height
     Vector3 toolboxPositionOffset = new Vector3(-320, toolboxY, 0);
+    
     //Transform[] toolImages = new Transform[numToolbox];
     Image[] toolImages = new Image[numToolbox];
     // Use this for initialization
@@ -116,5 +120,4 @@ public class ToolboxController : MonoBehaviour {
         delete(selectedIndex);
         return tmp;
     }
-    public Image toolImage;
 }

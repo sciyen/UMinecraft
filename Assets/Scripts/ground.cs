@@ -115,8 +115,8 @@ public abstract class TerrainGenerator
     public abstract float calFunction(Vector3 p);
     public bool isCovered(Vector3 p)
     {
-        if (Mathf.Abs(p.x - origin.x) <= size.x 
-         && Mathf.Abs(p.z - origin.z) <= size.z) return true;
+        if (Mathf.Abs(p.x - origin.x) <= size.x * alpha1
+         && Mathf.Abs(p.z - origin.z) <= size.z * alpha2) return true;
         return false;
         //if (calFunction(p) < p.y) return true;
         //else return false;
