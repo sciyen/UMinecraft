@@ -9,24 +9,17 @@ struct EnemyInfo
 public class EnemyControllor : MonoBehaviour {
     public Transform mainActor;
     public Transform enemyProto;
-    //List<EnemyInfo> Enemies = new List<EnemyInfo>();
     List<Transform> Enemies = new List<Transform>();
     // Use this for initialization
     void Start () {
-        //while (!Ground.mapReady) StartCoroutine(wait());
-        Debug.Log("Start");
     }
-	
-	// Update is called once per frame
 	void Update () {
         float enemyRatial = Random.Range(0f, 1f);
         if (Enemies.Count < Const.numEnemy)
             pushNewEnemy(getEnemyIdByRatial(enemyRatial));
         foreach(Transform e in Enemies) {
-            e.GetComponent<AutoMove>().setTarget(mainActor.transform.position);
-            //moveCtrl.setTarget(mainActor.transform.position);
-            //Vector3 vectorToMain = getVectorToMainActor(e);
-            //e.eulerAngles = vectorToMain;
+            if (calDistanceWithMainActor(e) > Const.creeperAttackDistance)
+                e.GetComponent<AutoMove>().setTarget(mainActor.transform.position);
         }
 	}
     void pushNewEnemy(Const.GameItemID id)
@@ -48,6 +41,10 @@ public class EnemyControllor : MonoBehaviour {
     float calDistanceWithMainActor(Vector3 p)
     {
         return Vector3.Distance(mainActor.transform.position, p);
+    }
+    float calDistanceWithMainActor(Transform t)
+    {
+        return Vector3.Distance(mainActor.transform.position, t.position);
     }
     Vector3 getVectorToMainActor(Transform v)
     {

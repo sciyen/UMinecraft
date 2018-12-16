@@ -21,7 +21,7 @@ public class AutoMove : MonoBehaviour {
 	void Update () {
         if (task) {
             Vector3 dir = target - transform.position;
-            Vector3 unitDir = dir.normalized / 2;
+            Vector3 unitDir = dir.normalized;
             Vector3 fp = transform.position + unitDir - Const.mapOrigin;
             if (Ground.map[(int)fp.x, (int)fp.y - 1, (int)fp.x] != Const.GameItemID.Empty)
                 jump();
@@ -36,7 +36,7 @@ public class AutoMove : MonoBehaviour {
     }
     void jump()
     {
-        if (!isJumping && Time.time - lastJumpTime > 0.5 && Input.GetKey(KeyCode.Space)) {
+        if (!isJumping && Time.time - lastJumpTime > 0.5) {
             isJumping = true;
             lastJumpTime = Time.time;
             rb.AddForce(new Vector3(0, 7, 0), ForceMode.Impulse);

@@ -62,14 +62,7 @@ public class Ground : MonoBehaviour {
 	}
     Const.GameItemID getRandomGround(Vector3 p, float dis=0)
     {
-        /*
-        //float d = getDistanceToGround(p);
-        float r = 1 - Mathf.Exp(-1*dis / 8f);
-        r += Random.Range(-0.2f, 0.2f);
-        Debug.Log(r);
-        if (r < 0.5) return Const.GameItemID.Dirt;*/
-        float d = dis;// getDistanceToGround(p);
-        float r = 1 - Mathf.Exp(-1*d / 5); 
+        float r = 1 - Mathf.Exp(-1*dis / 5); 
         r += Random.Range(-0f, 0.3f);
         if (r < 0.5) return Const.GameItemID.Dirt;
         return Const.GameItemID.Stone;

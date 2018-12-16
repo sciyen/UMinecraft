@@ -12,7 +12,7 @@ public class ToolboxController : MonoBehaviour {
     Vector3[] toolboxPosition = new Vector3[numToolbox];
     Vector2 itemSize = new Vector2(80, 84); //Width Height
     Vector2 toolSize = new Vector2(66, 66);  //Width Height
-    Vector3 toolboxPositionOffset = new Vector3(-320, -300, 0);
+    Vector3 toolboxPositionOffset = new Vector3(-320, -350, 0);
     //Transform[] toolImages = new Transform[numToolbox];
     Image[] toolImages = new Image[numToolbox];
     // Use this for initialization
