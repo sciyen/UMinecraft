@@ -53,15 +53,8 @@ public class Ground : MonoBehaviour {
         for (int x = 0; x < mapSize.x; x++)
             for (int z = 0; z < mapSize.z; z++)
                 for (int y = 0; y < mapSize.y; y++)
-                    if (map[x, y, z] != Const.GameItemID.Empty) {/*
-                        Material m1 = (Material)Resources.Load(ItemMap.getTextureName(map[x, y, z]));
-                        GameObject g = Instantiate(dirt);
-                        g.transform.parent = transform;
-                        g.transform.position = mapOrigin + new Vector3(x, y, z);
-                        g.name = map[x, y, z].ToString();
-                        g.GetComponent<Renderer>().material = m1;*/
+                    if (map[x, y, z] != Const.GameItemID.Empty)
                         instantiateItem(map[x, y, z], mapOrigin + new Vector3(x, y, z));
-                    }
         mapReady = true;
     }
 	void Update () {
