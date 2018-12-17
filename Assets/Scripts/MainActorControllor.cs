@@ -11,12 +11,13 @@ public class MainActorControllor : MonoBehaviour {
 
     Rigidbody rb;
     //Transform preTran;
+    AudioSource audio;
     bool is_jumping = false;
     Vector3 mouseInitial;
     ItemCtrl live = new ItemCtrl(Const.GameItemID.Empty);
     float lastJumpTime;
     void Start () {
-        transform.GetComponent<AudioSource>().Play(0);
+        audio = transform.GetComponent<AudioSource>();
         rb = GetComponent<Rigidbody>();
         mouseInitial = Input.mousePosition;
         lastJumpTime = Time.time;
@@ -73,7 +74,9 @@ public class MainActorControllor : MonoBehaviour {
                 Debug.Log("Hit= "+ hitId.ToString());
                 int instanceId = rch.transform.gameObject.GetInstanceID();
                 // Cube
-                if (ItemMap.isItem(hitId)) {     
+                if (ItemMap.isItem(hitId)) {
+                    if (!audio.isPlaying)
+                        audio.Play(0);
                     int destroyLevel = live.isAlive(hitId, instanceId, Const.attackPower * Time.deltaTime);
                     /*if(destroyLevel == -1) {
                         Material breakM1 = (Material)Resources.Load(ItemMap.getTextureName(hitId));
@@ -100,7 +103,7 @@ public class MainActorControllor : MonoBehaviour {
         }
         if (Input.GetMouseButton(1)) {
             if (toolbox.isSelected()) {
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                Ray ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2));
                 RaycastHit rch;
                 if (Physics.Raycast(ray, out rch)) {
                     Vector3 target = rch.point + rch.normal/2;

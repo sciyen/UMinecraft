@@ -1,14 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-struct EnemyInfo
-{
-    public Transform enemy;
-    public Const.GameItemID id;
-}
 public class EnemyControllor : MonoBehaviour {
     public Transform mainActor;
-    public Transform enemyProto;
+    public Transform creeperProto;
+    public Transform slimeProto;
     List<Transform> Enemies = new List<Transform>();
     // Use this for initialization
     void Start () {
@@ -21,21 +17,29 @@ public class EnemyControllor : MonoBehaviour {
             for (int i = 0; i < Enemies.Count; i++) {
                 // Auto move toward main actor
                 float enemyDis = calDistanceWithMainActor(Enemies[i]);
-                if (enemyDis < Const.creeperAttackDistance)
-                    mainActor.GetComponent<LiveManager>().attack(Const.creeperAttackPower);
-                else if (enemyDis < Const.creeperTrackDistance)
+                Const.GameItemID monsterId = ItemMap.getItemsID(Enemies[i].name);
+                Creature creatureInfo = ItemMap.getCreatureInfo(monsterId);
+                if (enemyDis < creatureInfo.attackDistance) {
+                    mainActor.GetComponent<LiveManager>().attack(creatureInfo.attackPower);
+                    if(monsterId == Const.GameItemID.Slime) {
+                        Enemies[i].GetComponent<Collider>().isTrigger = true;
+                        Enemies[i].GetComponent<Rigidbody>().useGravity = false;
+                        Enemies[i].localScale = new Vector3(10, 10, 10);
+                    }
+                }
+                else if (enemyDis < creatureInfo.trackDistance)
                     Enemies[i].GetComponent<AutoMove>().setTarget(mainActor.transform.position);
-
+                // Play audio
                 AudioSource audio = Enemies[i].GetComponent<AudioSource>();
-                if (enemyDis < Const.creeperAudioDistance) {
+                if (enemyDis < creatureInfo.audioDistance) {
                     if(!audio.isPlaying)    audio.Play(0);
-                    audio.volume = 1 - enemyDis / Const.creeperAudioDistance;
+                    audio.volume = 1 - enemyDis / creatureInfo.audioDistance;
                 }
                 else
                     audio.Pause();
                 // Destroy the creature if they died
-                LiveManager creeperLive = Enemies[i].GetComponent<LiveManager>();
-                if (creeperLive.live <= 0) {
+                LiveManager monster = Enemies[i].GetComponent<LiveManager>();
+                if (monster.live <= 0) {
                     Destroy(Enemies[i].gameObject);
                     Enemies.RemoveAt(i);
                 }
@@ -51,7 +55,9 @@ public class EnemyControllor : MonoBehaviour {
 	}
     void pushNewEnemy(Const.GameItemID id)
     {
-        Transform tmp = Instantiate(enemyProto);
+        Transform tmp;
+        if(id == Const.GameItemID.Creeper) tmp = Instantiate(creeperProto);
+        else tmp = Instantiate(slimeProto);
         Vector3 rnd;
         do {
             rnd = Ground.getRandomVector(Const.mapOrigin + Const.mapSize, Const.mapOrigin);
@@ -81,11 +87,11 @@ public class EnemyControllor : MonoBehaviour {
     }
     Const.GameItemID getEnemyIdByRatial(float r)
     {
-        int kindOfEnemy = 1;
+        int kindOfEnemy = 2;
         float slice = 1f / kindOfEnemy;
         float sum = slice;
         if (r < sum) return Const.GameItemID.Creeper;
-        return Const.GameItemID.Empty;
+        return Const.GameItemID.Slime;
     }
     IEnumerator wait()
     {

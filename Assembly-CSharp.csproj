@@ -63,6 +63,7 @@
      <Compile Include="Assets\Scripts\liverHeartControllor.cs" />
      <Compile Include="Assets\Scripts\MainActorControllor.cs" />
      <Compile Include="Assets\Scripts\Manager.cs" />
+     <Compile Include="Assets\Scripts\SlimeWeapon.cs" />
      <Compile Include="Assets\Scripts\TextInput.cs" />
      <Compile Include="Assets\Scripts\ToolboxController.cs" />
  <Reference Include="UnityEngine.UI">

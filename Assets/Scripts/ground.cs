@@ -96,10 +96,10 @@ public class Ground : MonoBehaviour {
     {
         Material m1 = (Material)Resources.Load(ItemMap.getTextureName(id));
         GameObject g = Instantiate(dirt);
-        g.GetComponent<Renderer>().material = m1;
         g.transform.parent = transform;
         g.transform.position = position;
         g.name = id.ToString();
+        g.GetComponent<Renderer>().material = m1;
     }
 }
 public abstract class TerrainGenerator

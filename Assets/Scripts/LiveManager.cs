@@ -45,7 +45,7 @@ public class ItemCtrl:LiveManager
             instanceId = newInstanceId;
             itemId = newId;
             relive();
-            return -1;
+            //return -1;
         }
         else
             live -= attack;

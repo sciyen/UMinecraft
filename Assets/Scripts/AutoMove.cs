@@ -23,7 +23,7 @@ public class AutoMove : MonoBehaviour {
             Vector3 dir = target - transform.position;
             Vector3 unitDir = dir.normalized;
             Vector3 fp = transform.position + unitDir - Const.mapOrigin;
-            if (Ground.map[(int)fp.x, (int)fp.y - 1, (int)fp.x] != Const.GameItemID.Empty)
+            if (Ground.map[(int)fp.x, (int)fp.y-1 , (int)fp.z] != Const.GameItemID.Empty)
                 jump();
             transform.position += unitDir * Time.deltaTime * 0.5f;
             if (Vector3.Distance(transform.position, target) < 1)
