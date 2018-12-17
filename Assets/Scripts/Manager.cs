@@ -44,12 +44,6 @@ public static class Const
     // Creeper
     public static Creature Creeper = new Creature(20, 1, 30, 5, 10);
     public static Creature Slime = new Creature(20, 1, 30, 5, 10);
-    /*
-    public static int creeperMaxLive = 20;
-    public static int creeperAttackPower = 1;
-    public static int creeperTrackDistance = 30;
-    public static int creeperAttackDistance = 5;
-    public static int creeperAudioDistance = 10;*/
 }
 public static class ItemMap
 {
