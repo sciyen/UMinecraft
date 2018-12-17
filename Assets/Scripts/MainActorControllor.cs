@@ -10,6 +10,7 @@ public class MainActorControllor : MonoBehaviour {
     public Ground ground;
 
     Rigidbody rb;
+    //Transform preTran;
     bool is_jumping = false;
     Vector3 mouseInitial;
     ItemCtrl live = new ItemCtrl(Const.GameItemID.Empty);
@@ -69,10 +70,15 @@ public class MainActorControllor : MonoBehaviour {
             RaycastHit rch;
             if (Physics.Raycast(ray, out rch)) {
                 Const.GameItemID hitId = ItemMap.getItemsID(rch.transform.gameObject.name);
+                Debug.Log("Hit= "+ hitId.ToString());
                 int instanceId = rch.transform.gameObject.GetInstanceID();
                 // Cube
                 if (ItemMap.isItem(hitId)) {     
                     int destroyLevel = live.isAlive(hitId, instanceId, Const.attackPower * Time.deltaTime);
+                    /*if(destroyLevel == -1) {
+                        Material breakM1 = (Material)Resources.Load(ItemMap.getTextureName(hitId));
+                        preTran.GetComponent<Renderer>().material = breakM1;
+                    }*/
                     if (destroyLevel <= 0) {
                         toolbox.pushItem(hitId);
                         Destroy(rch.transform.gameObject);
@@ -84,10 +90,11 @@ public class MainActorControllor : MonoBehaviour {
                         breakM1[1] = (Material)Resources.Load(name);
                         rch.transform.GetComponent<Renderer>().materials = breakM1;
                     }
+                    //preTran = rch.transform;
                 }
                 // Creature
                 else {
-                    rch.transform.GetComponent<LiveManager>().attack(Const.attackPower);
+                    rch.transform.GetComponent<LiveManager>().attack(Const.attackPower);// * Time.deltaTime);
                 }
             }
         }

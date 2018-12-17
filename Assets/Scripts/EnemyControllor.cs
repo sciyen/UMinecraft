@@ -25,14 +25,14 @@ public class EnemyControllor : MonoBehaviour {
                     mainActor.GetComponent<LiveManager>().attack(Const.creeperAttackPower);
                 else if (enemyDis < Const.creeperTrackDistance)
                     Enemies[i].GetComponent<AutoMove>().setTarget(mainActor.transform.position);
-                /*
+
+                AudioSource audio = Enemies[i].GetComponent<AudioSource>();
                 if (enemyDis < Const.creeperAudioDistance) {
-                    if(!Enemies[i].GetComponent<AudioSource>().isPlaying)
-                        Enemies[i].GetComponent<AudioSource>().Play(0);
-                    Enemies[i].GetComponent<AudioSource>().volume = 1 - enemyDis / Const.creeperAudioDistance;
+                    if(!audio.isPlaying)    audio.Play(0);
+                    audio.volume = 1 - enemyDis / Const.creeperAudioDistance;
                 }
-                else 
-                    Enemies[i].GetComponent<AudioSource>().Pause();*/
+                else
+                    audio.Pause();
                 // Destroy the creature if they died
                 LiveManager creeperLive = Enemies[i].GetComponent<LiveManager>();
                 if (creeperLive.live <= 0) {

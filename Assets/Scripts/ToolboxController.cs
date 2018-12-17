@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class ToolboxController : MonoBehaviour
 {
     public Image toolImage;
+    public Text toolNumProto;
 
     const int numToolbox = 9;
     static int selectedIndex = 0;
@@ -16,10 +17,12 @@ public class ToolboxController : MonoBehaviour
     Vector3[] toolboxPosition = new Vector3[numToolbox];
     Vector2 itemSize = new Vector2(80, 84); //Width Height
     //Vector2 toolSize = new Vector2(66, 66);  //Width Height
+    Vector3 toolNumPositionOffset = new Vector3(90, -20, 0); //Width Height
     Vector3 toolboxPositionOffset = new Vector3(-320, toolboxY, 0);
     
     //Transform[] toolImages = new Transform[numToolbox];
     Image[] toolImages = new Image[numToolbox];
+    Text[] toolNum = new Text[numToolbox];
     // Use this for initialization
     void Start () {
         GameObject.Find("toolbox").transform.localPosition = new Vector3(0, toolboxY, 0);
@@ -28,11 +31,14 @@ public class ToolboxController : MonoBehaviour
             toolbox[i] = Const.GameItemID.Empty;
             toolCount[i] = 0;
             toolImages[i] = Instantiate(toolImage);
-            //toolImages[i].SetParent(transform);
-            //toolImages[i].localPosition = toolboxPosition[i];
             toolImages[i].rectTransform.SetParent(transform);
             toolImages[i].rectTransform.localPosition = toolboxPosition[i];
             toolImages[i].gameObject.SetActive(false);
+
+            toolNum[i] = Instantiate(toolNumProto);
+            toolNum[i].rectTransform.SetParent(transform);
+            toolNum[i].rectTransform.localPosition = toolboxPosition[i] + toolNumPositionOffset;
+            toolNum[i].gameObject.SetActive(true);
         }
     }
 	
@@ -46,15 +52,21 @@ public class ToolboxController : MonoBehaviour
 
     void toolboxIndexOffset(int offset)
     {
-        selectedIndex += offset;
+        selectedIndex -= offset;
         if (selectedIndex < 0) selectedIndex += numToolbox;
         selectedIndex %= numToolbox;
     }
     void updateToolbox()
     {
         for (int i = 0; i < numToolbox; i++) {
-            if (toolCount[i] > 0) toolImages[i].gameObject.SetActive(true);
-            else toolImages[i].gameObject.SetActive(false);
+            if (toolCount[i] > 0) {
+                toolImages[i].gameObject.SetActive(true);
+                toolNum[i].text = toolCount[i].ToString();
+            }
+            else {
+                toolImages[i].gameObject.SetActive(false);
+                toolNum[i].text = "";
+            }
         }
     }
     int getEmptyIndex()
