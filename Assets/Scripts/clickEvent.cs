@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class clickEvent : MonoBehaviour {
 
-    bool modestate = false;
+    public static bool modestate = false;
 
     public GameObject single;
     public GameObject establish;

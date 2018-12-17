@@ -37,10 +37,10 @@ public static class Const
     public enum GameItemID { Empty, Dirt, DirtGrass, Stone, Creeper, Slime, MainActor };
     // Main Actor Configure
     public const int attackPower = 10;  // MainActor Attack Power
-    public const int maxLive = 10;
+    public const int maxLive = 13;
     // Enemy Configure
-    public const int numEnemy = 10;
-    public const float appearRadius = 20;
+    public const int numEnemy = 20;
+    public const float appearRadius = 15;
     // Creeper
     public static Creature Creeper = new Creature(20, 1, 30, 5, 10);
     public static Creature Slime = new Creature(20, 1, 30, 5, 10);

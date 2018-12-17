@@ -101,6 +101,11 @@ public class Ground : MonoBehaviour {
         g.name = id.ToString();
         g.GetComponent<Renderer>().material = m1;
     }
+    public static void destroyItem(Vector3 p)
+    {
+        p = p - Const.mapOrigin;
+        map[(int)p.x, (int)p.y, (int)p.z] = Const.GameItemID.Empty;
+    }
 }
 public abstract class TerrainGenerator
 {

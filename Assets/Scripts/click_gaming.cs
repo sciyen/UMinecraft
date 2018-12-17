@@ -15,15 +15,14 @@ public class click_gaming : MonoBehaviour {
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            if (state)
-            {
+        if (Input.GetKeyDown(KeyCode.Escape)) {
+            if (state) {
+                Cursor.visible = false;
                 pauseMode.gameObject.SetActive(false);
                 state = false;
             }
-            else
-            {
+            else {
+                Cursor.visible = true;
                 pauseMode.gameObject.SetActive(true);
                 state = true;
             }
@@ -35,6 +34,7 @@ public class click_gaming : MonoBehaviour {
         pauseMode.gameObject.SetActive(false);
         state = false;
     }
+
 
     public void save()
     {

@@ -20,11 +20,16 @@ public class EnemyControllor : MonoBehaviour {
                 Const.GameItemID monsterId = ItemMap.getItemsID(Enemies[i].name);
                 Creature creatureInfo = ItemMap.getCreatureInfo(monsterId);
                 if (enemyDis < creatureInfo.attackDistance) {
-                    mainActor.GetComponent<LiveManager>().attack(creatureInfo.attackPower);
+                    if (!clickEvent.modestate)
+                        mainActor.GetComponent<LiveManager>().attack(creatureInfo.attackPower);
                     if(monsterId == Const.GameItemID.Slime) {
-                        Enemies[i].GetComponent<Collider>().isTrigger = true;
-                        Enemies[i].GetComponent<Rigidbody>().useGravity = false;
-                        Enemies[i].localScale = new Vector3(10, 10, 10);
+                        BoxCollider col = Enemies[i].GetComponent<BoxCollider>();
+                        SlimeWeapon weap = Enemies[i].GetComponent<SlimeWeapon>();
+                        Rigidbody rig = Enemies[i].GetComponent<Rigidbody>();
+                        Enemies[i].transform.localScale = new Vector3(7, 7, 7);
+                        col.isTrigger = true;
+                        weap.triggered = true;
+                        rig.useGravity = false;
                     }
                 }
                 else if (enemyDis < creatureInfo.trackDistance)

@@ -40,7 +40,7 @@ public class ItemCtrl:LiveManager
     }
     public int isAlive(Const.GameItemID newId, int newInstanceId, float attack = 1)
     {
-        Debug.Log(itemId.ToString() + " = " + live.ToString());
+        //Debug.Log(itemId.ToString() + " = " + live.ToString());
         if (newInstanceId != instanceId) {
             instanceId = newInstanceId;
             itemId = newId;

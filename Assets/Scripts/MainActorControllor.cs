@@ -5,22 +5,28 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(Collision))]
 [RequireComponent(typeof(AudioSource))]
+[RequireComponent(typeof(Animator))]
 public class MainActorControllor : MonoBehaviour {
     public ToolboxController toolbox;
     public Ground ground;
 
     Rigidbody rb;
+    Animator anime;
     //Transform preTran;
     AudioSource audio;
     bool is_jumping = false;
     Vector3 mouseInitial;
     ItemCtrl live = new ItemCtrl(Const.GameItemID.Empty);
     float lastJumpTime;
+    float lastClickTime;
     void Start () {
+        Cursor.visible = false;
         audio = transform.GetComponent<AudioSource>();
+        anime = transform.GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
         mouseInitial = Input.mousePosition;
         lastJumpTime = Time.time;
+        lastClickTime = Time.time;
         while (!Ground.mapReady) StartCoroutine(wait());
         transform.position = Ground.getPointOnGround(new Vector3(Const.mapSize.x/2, 0, Const.mapSize.z/2));
     }
@@ -30,6 +36,7 @@ public class MainActorControllor : MonoBehaviour {
     }
 	// Update is called once per frame
 	void Update () {
+        anime.SetFloat("speed", 0f);
         // Move
         #region Move
         if (Input.GetKey(KeyCode.W)) {
@@ -44,7 +51,8 @@ public class MainActorControllor : MonoBehaviour {
         else if (Input.GetKey(KeyCode.A)) {
             transform.localPosition += -1 * Const.moveSpeed * Time.deltaTime * transform.right;
         }
-#endregion
+        anime.SetFloat("speed", rb.velocity.magnitude);
+        #endregion
         // Jump
         #region Jump
         if (!is_jumping && Time.time - lastJumpTime > 0.5 && Input.GetKey(KeyCode.Space)) {
@@ -71,7 +79,7 @@ public class MainActorControllor : MonoBehaviour {
             RaycastHit rch;
             if (Physics.Raycast(ray, out rch)) {
                 Const.GameItemID hitId = ItemMap.getItemsID(rch.transform.gameObject.name);
-                Debug.Log("Hit= "+ hitId.ToString());
+                //Debug.Log("Hit= "+ hitId.ToString());
                 int instanceId = rch.transform.gameObject.GetInstanceID();
                 // Cube
                 if (ItemMap.isItem(hitId)) {
@@ -98,11 +106,12 @@ public class MainActorControllor : MonoBehaviour {
                 // Creature
                 else {
                     rch.transform.GetComponent<LiveManager>().attack(Const.attackPower);// * Time.deltaTime);
+                    rch.transform.GetComponent<Rigidbody>().AddForce(ray.direction.normalized*2000);
                 }
             }
         }
         if (Input.GetMouseButton(1)) {
-            if (toolbox.isSelected()) {
+            if (toolbox.isSelected() && Time.time - lastClickTime > 0.5) {
                 Ray ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2));
                 RaycastHit rch;
                 if (Physics.Raycast(ray, out rch)) {
@@ -112,6 +121,7 @@ public class MainActorControllor : MonoBehaviour {
                     target.z = Mathf.Round(target.z);
                     ground.instantiateItem(toolbox.deleteSeletedItem(), target);
                 }
+                lastClickTime = Time.time;
             }
         }
 #endregion
