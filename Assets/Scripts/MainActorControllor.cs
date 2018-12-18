@@ -19,6 +19,9 @@ public class MainActorControllor : MonoBehaviour {
     ItemCtrl live = new ItemCtrl(Const.GameItemID.Empty);
     float lastJumpTime;
     float lastClickTime;
+    float lastSpaceReleaseTime;
+    enum SpaceMode { Jump, Flying};
+    SpaceMode spaceMode = SpaceMode.Jump;
     void Start () {
         Cursor.visible = false;
         audio = transform.GetComponent<AudioSource>();
@@ -27,6 +30,7 @@ public class MainActorControllor : MonoBehaviour {
         mouseInitial = Input.mousePosition;
         lastJumpTime = Time.time;
         lastClickTime = Time.time;
+        lastSpaceReleaseTime = Time.time;
         while (!Ground.mapReady) StartCoroutine(wait());
         transform.position = Ground.getPointOnGround(new Vector3(Const.mapSize.x/2, 0, Const.mapSize.z/2));
     }
@@ -52,17 +56,42 @@ public class MainActorControllor : MonoBehaviour {
             transform.localPosition += -1 * Const.moveSpeed * Time.deltaTime * transform.right;
         }
         anime.SetFloat("speed", rb.velocity.magnitude);
+        if(transform.position.y  < Const.mapOrigin.y)
+            transform.position = Ground.getPointOnGround(new Vector3(Const.mapSize.x / 2, 0, Const.mapSize.z / 2));
         #endregion
         // Jump
         #region Jump
-        if (!is_jumping && Time.time - lastJumpTime > 0.5 && Input.GetKey(KeyCode.Space)) {
-            //rb.AddForce(jumpForce * Time.deltaTime * Vector3.up, ForceMode.Impulse);
-            is_jumping = true;
-            lastJumpTime = Time.time;
-            rb.AddForce(new Vector3(0, 7, 0), ForceMode.Impulse);
-            //transform.localPosition += jumpForce * Time.deltaTime * Vector3.up;
+        if (Input.GetKey(KeyCode.Space)) {
+            if (clickEvent.modestate && Time.time - lastSpaceReleaseTime < 1) {
+                Debug.Log("mode changed" + spaceMode.ToString());
+                if (spaceMode == SpaceMode.Jump) {
+                    spaceMode = SpaceMode.Flying;
+                    transform.GetComponent<Rigidbody>().useGravity = false;
+                }
+                else if (spaceMode == SpaceMode.Flying) {
+                    spaceMode = SpaceMode.Jump;
+                    transform.GetComponent<Rigidbody>().useGravity = true;
+                }
+            }
+            if(spaceMode == SpaceMode.Jump) {
+                if (!is_jumping && Time.time - lastJumpTime > 0.5) {
+                    //rb.AddForce(jumpForce * Time.deltaTime * Vector3.up, ForceMode.Impulse);
+                    is_jumping = true;
+                    lastJumpTime = Time.time;
+                    rb.AddForce(new Vector3(0, 7, 0), ForceMode.Impulse);
+                    //transform.localPosition += jumpForce * Time.deltaTime * Vector3.up;
+                }
+            }
+            else if(spaceMode == SpaceMode.Flying) {
+                transform.localPosition += Const.moveSpeed * Time.deltaTime * transform.up;
+            }
         }
-#endregion
+        else
+            lastSpaceReleaseTime = Time.time;
+
+        if (Input.GetKey(KeyCode.LeftShift) && spaceMode == SpaceMode.Flying)
+            transform.localPosition -= Const.moveSpeed * Time.deltaTime * transform.up;
+        #endregion
         // Rotate
         #region Rotate
         Vector3 dis = Input.mousePosition - mouseInitial;

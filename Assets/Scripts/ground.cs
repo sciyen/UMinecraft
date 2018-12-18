@@ -7,12 +7,12 @@ public class Ground : MonoBehaviour {
     public GameObject dirt;
     public static Vector3 mapSize = Const.mapSize;//new Vector3Int(Const.mapSize.x, mapSize.y, mapSize.z);
     public static Vector3 mapOrigin = Const.mapOrigin;
-    public Vector3Int terrainMaxSize = new Vector3Int(50, 15, 50);
-    public Vector3Int terrainMinSize = new Vector3Int(5, 5, 5);
+    public Vector3Int terrainMaxSize = new Vector3Int(50, 10, 50);
+    public Vector3Int terrainMinSize = new Vector3Int(5, 1, 5);
     public static Const.GameItemID[,,] map = new Const.GameItemID[(int)mapSize.x, (int)mapSize.y, (int)mapSize.z];
     public static bool mapReady = false;
 
-    int groundLevel = 3;
+    int groundLevel = 1;
     int numOfMountain = 10;
 
     // Use this for initialization
