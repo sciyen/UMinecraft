@@ -29,7 +29,7 @@ public class liverHeartControllor : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         updateLiveHeart();
-        if(clickEvent.modestate && mainActorLive.live <= 0) {
+        if(!clickEvent.modestate && mainActorLive.live <= 0) {
             gameOver.SetActive(true);
             Cursor.visible = true;
         }
