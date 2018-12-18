@@ -32,6 +32,7 @@ public class clickEvent : MonoBehaviour {
 
     public void developer()
     {
+        updateAll();
         develop.gameObject.SetActive(true);
     }
 
